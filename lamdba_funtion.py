@@ -62,7 +62,7 @@ def apply_rules(row):
     # Regla 11: Crear campo anio_semana
     row['anio_semana'] = f"{row['ano']}-S{str(row['semana']).zfill(2)}"
 
-    # Reglas 12–20: Limpieza adicional
+    # Reglas 12: Limpieza adicional
     for key in ['microred', 'establecimiento']:
         row[key] = row.get(key, '').replace('"', '').replace("'", "").strip()
 
