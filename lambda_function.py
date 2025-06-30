@@ -87,11 +87,9 @@ def lambda_handler(event, context):
             local_csv = os.path.join(tmp, 'input.csv')
             local_json = os.path.join(tmp, 'output.json')
 
-            # Descargar archivo CSV desde S3
             s3.download_file(input_bucket, key, local_csv)
             print(f"Downloaded file to {local_csv}")
 
-            # Procesar CSV y aplicar reglas
             cleaned_data = []
             with open(local_csv, newline='', encoding='utf-8') as f:
                 reader = csv.DictReader(f)
@@ -102,12 +100,15 @@ def lambda_handler(event, context):
 
             print(f"Rows after cleaning: {len(cleaned_data)}")
 
-            # Guardar JSON procesado
             with open(local_json, 'w', encoding='utf-8') as f:
                 json.dump(cleaned_data, f, ensure_ascii=False)
+                
+            if '/' in key:
+                filename = key.split('/')[-1]
+            else:
+                filename = key
 
-            # Subir archivo JSON al bucket de salida
-            output_key = key.replace('uploads/', 'processed/').replace('.csv', '.json')
+            output_key = f"processed/{filename.replace('.csv', '.json')}"
             print(f"Uploading cleaned file to: {output_key}")
             s3.upload_file(local_json, output_bucket, output_key)
 
