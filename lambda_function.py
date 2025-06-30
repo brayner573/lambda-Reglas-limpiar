@@ -130,7 +130,7 @@ def lambda_handler(event, context):
                     clean = apply_rules(row)
                     if clean and clean['unique_key'] not in unique_keys:
                         unique_keys.add(clean['unique_key'])
-                        del clean['unique_key']  # Ya no es necesario guardar la clave
+                        del clean['unique_key']
                         cleaned_data.append(clean)
 
             print(f"Rows after cleaning and removing duplicates: {len(cleaned_data)}")
